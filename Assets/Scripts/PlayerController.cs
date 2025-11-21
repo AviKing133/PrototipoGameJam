@@ -5,13 +5,9 @@ public class PlayerMovement : MonoBehaviour
     public float moveSpeed = 5f;
     public float jumpForce = 7f;
 
-    public Transform groundCheck;
-    public float groundCheckRadius = 0.2f;
-    public LayerMask groundLayer;
-
     private Rigidbody2D rb;
-    private bool isGrounded;
     private float moveInput;
+    private bool isGrounded;
     private bool facingRight = true;
 
     void Start()
@@ -22,24 +18,43 @@ public class PlayerMovement : MonoBehaviour
     void Update()
     {
         // Movimiento horizontal
-        moveInput = Input.GetAxisRaw("Horizontal");
-        rb.linearVelocity = new Vector2(moveInput * moveSpeed, rb.linearVelocity.y);
+        if (isGrounded)
+        {
+            moveInput = Input.GetAxisRaw("Horizontal");
+            rb.linearVelocity = new Vector2(moveInput * moveSpeed, rb.linearVelocity.y);
+        }
 
         // Saltar
-        isGrounded = Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, groundLayer);
         if (isGrounded && Input.GetButtonDown("Jump"))
         {
             rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
         }
 
         // Voltear personaje
-        if (facingRight == false && moveInput > 0)
+        if (!facingRight && moveInput > 0)
         {
             Flip();
         }
-        else if (facingRight == true && moveInput < 0)
+        else if (facingRight && moveInput < 0)
         {
             Flip();
+        }
+    }
+
+    // Detectar suelo mediante TAG
+    private void OnCollisionStay2D(Collision2D other)
+    {
+        if (other.gameObject.CompareTag("GROUND"))
+        {
+            isGrounded = true;
+        }
+    }
+
+    private void OnCollisionExit2D(Collision2D other)
+    {
+        if (other.gameObject.CompareTag("GROUND"))
+        {
+            isGrounded = false;
         }
     }
 
@@ -50,11 +65,4 @@ public class PlayerMovement : MonoBehaviour
         scaler.x *= -1;
         transform.localScale = scaler;
     }
-
-    private void OnDrawGizmosSelected()
-    {
-        Gizmos.color = Color.yellow;
-        Gizmos.DrawWireSphere(groundCheck.position, groundCheckRadius);
-    }
 }
-
