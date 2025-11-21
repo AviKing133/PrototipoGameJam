@@ -6,6 +6,7 @@ TagManager:
   tags:
   - GROUND
   - PLAYER
+  - LADDER
   layers:
   - Default
   - TransparentFX
