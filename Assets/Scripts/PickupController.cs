@@ -6,13 +6,13 @@ public class PickupController : MonoBehaviour
     {
         if (collision.CompareTag("PLAYER") && Input.GetKeyDown(KeyCode.E) && !GameManager.instance.playerHaveDash)
         {
-            Destroy(gameObject);
             GameManager.instance.ActivateDash();
+            Destroy(gameObject);
         }
         if (collision.CompareTag("PLAYER") && Input.GetKeyDown(KeyCode.E) && GameManager.instance.playerHaveDash)
         {
-            Destroy(gameObject);
             GameManager.instance.ActivateWallJump();
+            Destroy(gameObject);
         }
     }
 }

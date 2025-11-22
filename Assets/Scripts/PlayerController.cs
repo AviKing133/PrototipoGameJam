@@ -14,8 +14,6 @@ public class PlayerMovement : MonoBehaviour
     private bool isDash = false;
     private bool canDash = true;
 
-    [SerializeField] private Collider2D colliderToActivate;
-
     [SerializeField]
     private GameObject cuadradoInteraccion;
     [SerializeField]
@@ -66,7 +64,7 @@ public class PlayerMovement : MonoBehaviour
             rb.linearVelocity = new Vector2(moveInput * moveSpeed, rb.linearVelocity.y);
         }
         // Dash
-        if (Input.GetKeyDown(KeyCode.LeftShift) && canDash)
+        if (Input.GetKeyDown(KeyCode.LeftShift) && canDash && GameManager.instance.playerHaveDash)
         {
             StartCoroutine(Dash());
         }

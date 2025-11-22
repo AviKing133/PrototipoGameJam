@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 1820738913156401505}
   - component: {fileID: 3329698758781346435}
   - component: {fileID: 7700110671641440687}
-  - component: {fileID: 7693642154850325007}
+  - component: {fileID: -1770795676192268073}
   m_Layer: 0
   m_Name: Pickup
   m_TagString: PICKUP
@@ -125,7 +125,7 @@ CircleCollider2D:
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: 0}
   m_Radius: 2.19
---- !u!114 &7693642154850325007
+--- !u!114 &-1770795676192268073
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
