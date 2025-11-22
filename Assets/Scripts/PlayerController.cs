@@ -5,11 +5,13 @@ using static UnityEditor.Searcher.SearcherWindow.Alignment;
 public class PlayerMovement : MonoBehaviour
 {
     private bool isOnWall = false;
-    private int wallDirection = 0; // -1 si la pared está a la izquierda, 1 si está a la derecha
+    private int wallDirection = 0;
 
     [Header("Wall Jump")]
     public float wallJumpForce = 10f;
     public float wallJumpHorizontalForce = 8f;
+    public float wallJumpDisableTime = 0.15f;
+
     [Header("Jump")]
     public float moveSpeed = 5f;
     public float jumpForce = 7f;
@@ -25,28 +27,35 @@ public class PlayerMovement : MonoBehaviour
     private GameObject cuadradoInteraccion;
     [SerializeField]
     private Transform groundCheck;
+    [SerializeField]
+    private Transform coyoteTime;
 
     [Header("Dash")]
     public float dashSpeed = 15f;
     public float dashDuration = 0.2f;
     public float dashCooldown = 1f;
+    float dashDirection = 0f;
 
     // VARIABLES PARA ESCALERA DE MANO
     private float vertical;
     private bool isClimbing = false;
-    private bool isLadder = false;  
+    private bool isLadder = false;
+
+    private bool wallDetectionEnabled = true;
 
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
+
+        // Asegurarnos de que facingRight refleja el scale actual
+        facingRight = transform.localScale.x > 0f;
     }
 
     void Update()
     {
         vertical = Input.GetAxis("Vertical");
-
         RaycastHit2D hit = Physics2D.Raycast(groundCheck.position, Vector2.down, 0.2f);
-        if (!isGrounded && isOnWall && Input.GetButtonDown("Jump") && GameManager.instance.playerWallJump)
+        if (!isGrounded && isOnWall && Input.GetButtonDown("Jump") && GameManager.instance.playerWallJump && wallDetectionEnabled)
         {
             WallJump();
         }
@@ -54,7 +63,7 @@ public class PlayerMovement : MonoBehaviour
         {
             isClimbing = true;
         }
-        else if(!isLadder)
+        else if (!isLadder)
         {
             isClimbing = false;
         }
@@ -78,27 +87,31 @@ public class PlayerMovement : MonoBehaviour
         {
             StartCoroutine(Dash());
         }
-
-        // Saltar
+        // Voltear personaje según input horizontal (sólo si no está bloqueado por otras cosas)
+        if (!facingRight && moveInput > 0 && isGrounded)
+        {
+            Flip();
+        }
+        else if (facingRight && moveInput < 0 && isGrounded)
+        {
+            Flip();
+        }
+        RaycastHit2D hitLeft = Physics2D.Raycast(coyoteTime.position, Vector2.left, 0.2f);
+        RaycastHit2D hitRight = Physics2D.Raycast(coyoteTime.position, Vector2.right, 0.2f);
+        
+        if (hitLeft.collider != null && hitLeft.collider.CompareTag("GROUND"))
+        {
+            isGrounded = true;
+        }
+        else if (hitRight.collider != null && hitRight.collider.CompareTag("GROUND"))
+        {
+            isGrounded = true;
+        }
+        // Saltar (sólo desde suelo)
         if (isGrounded && Input.GetButtonDown("Jump"))
         {
             rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
         }
-        if (isGrounded && Input.GetButtonDown("Jump"))
-        {
-            rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
-        }
-
-        // Voltear personaje
-        if (!facingRight && moveInput > 0)
-        {
-            Flip();
-        }
-        else if (facingRight && moveInput < 0)
-        {
-            Flip();
-        }
-
     }
 
     private void FixedUpdate()
@@ -118,7 +131,7 @@ public class PlayerMovement : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("LADDER"))
         {
-            if(collision.CompareTag("LADDER"))
+            if (collision.CompareTag("LADDER"))
             {
                 LadderScript script = collision.GetComponent<LadderScript>();
                 if (script != null)
@@ -128,7 +141,7 @@ public class PlayerMovement : MonoBehaviour
                 isLadder = true;
             }
         }
-        
+
         if (collision.CompareTag("LADDEREXIT"))
         {
             LadderScript script = collision.GetComponentInParent<LadderScript>();
@@ -156,7 +169,6 @@ public class PlayerMovement : MonoBehaviour
                 script.DesactivarColiderExit();
             }
         }
-
     }
     private void OnTriggerExit2D(Collider2D collision)
     {
@@ -164,26 +176,46 @@ public class PlayerMovement : MonoBehaviour
         {
             cuadradoInteraccion.SetActive(false);
         }
-        if(collision.gameObject.CompareTag("LADDER"))
+        if (collision.gameObject.CompareTag("LADDER"))
         {
             isLadder = false;
             isClimbing = false;
-            rb.gravityScale = 1f; 
-            rb.linearVelocity = new Vector2(rb.linearVelocity.x, 0f); 
+            rb.gravityScale = 1f;
+            rb.linearVelocity = new Vector2(rb.linearVelocity.x, 0f);
         }
     }
 
-    // Detectar suelo mediante TAG
+    // Detectar pared mediante contactos - ahora más fiable
     private void OnCollisionStay2D(Collision2D other)
     {
+        if (!wallDetectionEnabled) return;
+
         if (other.gameObject.CompareTag("WALL"))
         {
-            isOnWall = true;
+            // calcular posición media de los puntos de contacto
+            float sumX = 0f;
+            int count = 0;
+            foreach (ContactPoint2D c in other.contacts)
+            {
+                sumX += c.point.x;
+                count++;
+            }
 
-            if (other.transform.position.x > transform.position.x)
-                wallDirection = 1;
-            else
-                wallDirection = -1;
+            if (count > 0)
+            {
+                float avgContactX = sumX / count;
+                // si avgContactX es mayor que la posición del jugador, la pared está a la derecha
+                if (avgContactX > transform.position.x)
+                {
+                    wallDirection = 1;
+                }
+                else
+                {
+                    wallDirection = -1;
+                }
+
+                isOnWall = true;
+            }
         }
         if (other.gameObject.CompareTag("GROUND"))
         {
@@ -203,17 +235,19 @@ public class PlayerMovement : MonoBehaviour
             isGrounded = false;
         }
     }
+
     private System.Collections.IEnumerator Dash()
     {
         canDash = false;
         isDash = true;
 
+        rb.linearVelocity = Vector2.zero;
         float originalGravity = rb.gravityScale;
         rb.gravityScale = 0f; // evita caída durante el dash
 
         // dirección según input actual (si está quieto, usa la última dirección)
-        float dashDirection = transform.localScale.x > 0 ? 1 : -1;
-        if (moveInput != 0) dashDirection = moveInput;
+        dashDirection = transform.localScale.x > 0 ? 1 : -1;
+        if (moveInput != 0 && isGrounded) dashDirection = moveInput;
 
         rb.linearVelocity = new Vector2(dashDirection * dashSpeed, 0f);
 
@@ -225,17 +259,22 @@ public class PlayerMovement : MonoBehaviour
         yield return new WaitForSeconds(dashCooldown);
         canDash = true;
     }
+
     private void WallJump()
     {
         rb.linearVelocity = Vector2.zero;
-        rb.AddForce(new Vector2(-wallDirection * wallJumpHorizontalForce, wallJumpForce), ForceMode2D.Impulse);
+        Flip();
+        int jumpDir = -wallDirection;
+        dashDirection = jumpDir;
+        rb.AddForce(new Vector2(jumpDir * wallJumpHorizontalForce, wallJumpForce), ForceMode2D.Impulse);
     }
+
     void Flip()
     {
         facingRight = !facingRight;
         Vector3 scaler = transform.localScale;
         scaler.x *= -1;
         transform.localScale = scaler;
+        Debug.Log("Flip: " + facingRight);
     }
-
 }
