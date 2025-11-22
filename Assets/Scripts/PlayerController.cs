@@ -14,6 +14,7 @@ public class PlayerMovement : MonoBehaviour
     private bool isDash = false;
     private bool canDash = true;
 
+    [SerializeField] private Collider2D colliderToActivate;
 
     [SerializeField]
     private GameObject cuadradoInteraccion;
@@ -26,13 +27,9 @@ public class PlayerMovement : MonoBehaviour
     public float dashCooldown = 1f;
 
     // VARIABLES PARA ESCALERA DE MANO
-    private bool isUnderPlatform = false,
-    isCloseToLadder = false,
-    climbHeld = false, 
-    hasStartedClimb = false;
-    private Transform ladder;
-    private float vertical = 0f;
-    private float climbSpeed = 0.2f;
+    private float vertical;
+    private bool isClimbing = false;
+    private bool isLadder = false;  
 
     void Start()
     {
@@ -41,7 +38,18 @@ public class PlayerMovement : MonoBehaviour
 
     void Update()
     {
+        vertical = Input.GetAxis("Vertical");
+
         RaycastHit2D hit = Physics2D.Raycast(groundCheck.position, Vector2.down, 0.2f);
+
+        if(isLadder && Mathf.Abs(vertical) > 0f)
+        {
+            isClimbing = true;
+        }
+        else if(!isLadder)
+        {
+            isClimbing = false;
+        }
 
         if (hit.collider != null && hit.collider.CompareTag("GROUND"))
         {
@@ -83,87 +91,77 @@ public class PlayerMovement : MonoBehaviour
             Flip();
         }
 
-        // LADDER MOVEMENT
-        /*
-        vertical = Input.GetAxisRaw("Vertical") * climbSpeed;
-        if (isOnGround() && horizontal.Equals(0) && !isCloseToLadder && (crouchHeld || isUnderPlatform))
-            GetComponent<Animator>().Play("CharacterCrouchIdle");
-        else if (isOnGround() && !isCloseToLadder && (horizontal > 0 || horizontal < 0) && (crouchHeld || isUnderPlatform))
-            GetComponent<Animator>().Play("CharacterCrouch");
-        else if (isOnGround() && !hasStartedClimb && horizontal.Equals(0))
-            GetComponent<Animator>().Play("CharacterIdle");
-        else if (isOnGround() && !hasStartedClimb && (horizontal > 0 || horizontal < 0))
-            GetComponent<Animator>().Play("CharacterWalk");
-        */
-        // Evalua una condicio i li assigna true si és verdader, false si és fals
-        climbHeld = (isCloseToLadder && Input.GetButton("Climb")) ? true : false;
+    }
 
-        if (climbHeld)
+    private void FixedUpdate()
+    {
+        if (isClimbing)
         {
-            if (!hasStartedClimb) hasStartedClimb = true;
+            rb.gravityScale = 0f;
+            rb.linearVelocity = new Vector2(rb.linearVelocity.x, vertical * moveSpeed);
         }
-        else
+        if (!isClimbing && rb.gravityScale == 0f)
         {
-            if (hasStartedClimb)
-            {
-                GetComponent<Animator>().Play("CharacterClimbIdle");
-            }
+            rb.gravityScale = 1f;
         }
     }
-    /*
-    void FixedUpdate()
+
+    private void OnTriggerEnter2D(Collider2D collision)
     {
-    // Climbing
-    if (hasStartedClimb && !climbHeld)
+        if (collision.gameObject.CompareTag("LADDER"))
         {
-            if (horizontal > 0 || horizontal < 0) ResetClimbing();
-        }
-        else if (hasStartedClimb && climbHeld)
-        {
-            float height = GetComponent<SpriteRenderer>().size.y;
-            float topHandlerY = Half(ladder.transform.GetChild(0).transform.position.y + height);
-            float bottomHandlerY = Half(ladder.transform.GetChild(1).transform.position.y + height);
-            float transformY = Half(transform.position.y);
-            float transformVY = transformY + vertical;
-
-            if (transformVY > topHandlerY || transformVY < bottomHandlerY)
+            if(collision.CompareTag("LADDER"))
             {
-                ResetClimbing();
-            }
-            else if (transformY <= topHandlerY && transformY >= bottomHandlerY)
-            {
-                rigidBody2D.bodyType = RigidbodyType2D.Kinematic;
-                if (!transform.position.x.Equals(ladder.transform.position.x))
-                    transform.position = new Vector3(ladder.transform.position.x, transform.position.y, transform.position.z);
-
-                GetComponent<Animator>().Play("CharacterClimb");
-                Vector3 forwardDirection = new Vector3(0, transformVY, 0);
-                Vector3 newPos = Vector3.zero;
-                if (vertical > 0)
-                    newPos = transform.position + forwardDirection * Time.deltaTime * climbSpeed;
-                else if (vertical < 0)
-                    newPos = transform.position - forwardDirection * Time.deltaTime * climbSpeed;
-                if (newPos != Vector3.zero) rigidBody2D.MovePosition(newPos);
+                LadderScript script = collision.GetComponent<LadderScript>();
+                if (script != null)
+                {
+                    script.DesactivarColiderExit();
+                }
+                isLadder = true;
             }
         }
-    */
+        
+        if (collision.CompareTag("LADDEREXIT"))
+        {
+            LadderScript script = collision.GetComponentInParent<LadderScript>();
+            if (script != null)
+            {
+                script.ActivarColiderExit();
+            }
+            isClimbing = false;
+            rb.gravityScale = 1f;
+            rb.linearVelocity = new Vector2(rb.linearVelocity.x, 0f);
+        }
+    }
+
     private void OnTriggerStay2D(Collider2D collision)
     {
         if (collision.gameObject.CompareTag("PICKUP"))
         {
             cuadradoInteraccion.SetActive(true);
         }
-        if (collision.gameObject.tag.Equals("Ladder"))
+        if (collision.gameObject.CompareTag("LADDEREXIT") && Input.GetKeyDown(KeyCode.S))
         {
-            isCloseToLadder = true;
-            this.ladder = collision.transform;
+            LadderScript script = collision.GetComponentInParent<LadderScript>();
+            if (script != null)
+            {
+                script.DesactivarColiderExit();
+            }
         }
+
     }
     private void OnTriggerExit2D(Collider2D collision)
     {
         if (collision.gameObject.CompareTag("PICKUP"))
         {
             cuadradoInteraccion.SetActive(false);
+        }
+        if(collision.gameObject.CompareTag("LADDER"))
+        {
+            isLadder = false;
+            isClimbing = false;
+            rb.gravityScale = 1f; 
+            rb.linearVelocity = new Vector2(rb.linearVelocity.x, 0f); 
         }
     }
 
@@ -212,4 +210,5 @@ public class PlayerMovement : MonoBehaviour
         scaler.x *= -1;
         transform.localScale = scaler;
     }
+
 }
