@@ -1,4 +1,6 @@
 using UnityEngine;
+using UnityEngine.U2D.IK;
+using static UnityEditor.Searcher.SearcherWindow.Alignment;
 
 public class PlayerMovement : MonoBehaviour
 {
@@ -11,6 +13,9 @@ public class PlayerMovement : MonoBehaviour
     private bool facingRight = true;
     private bool isDash = false;
     private bool canDash = true;
+
+    [SerializeField] private Collider2D colliderToActivate;
+
     [SerializeField]
     private GameObject cuadradoInteraccion;
     [SerializeField]
@@ -21,6 +26,11 @@ public class PlayerMovement : MonoBehaviour
     public float dashDuration = 0.2f;
     public float dashCooldown = 1f;
 
+    // VARIABLES PARA ESCALERA DE MANO
+    private float vertical;
+    private bool isClimbing = false;
+    private bool isLadder = false;  
+
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -28,7 +38,18 @@ public class PlayerMovement : MonoBehaviour
 
     void Update()
     {
+        vertical = Input.GetAxis("Vertical");
+
         RaycastHit2D hit = Physics2D.Raycast(groundCheck.position, Vector2.down, 0.2f);
+
+        if(isLadder && Mathf.Abs(vertical) > 0f)
+        {
+            isClimbing = true;
+        }
+        else if(!isLadder)
+        {
+            isClimbing = false;
+        }
 
         if (hit.collider != null && hit.collider.CompareTag("GROUND"))
         {
@@ -69,6 +90,48 @@ public class PlayerMovement : MonoBehaviour
         {
             Flip();
         }
+
+    }
+
+    private void FixedUpdate()
+    {
+        if (isClimbing)
+        {
+            rb.gravityScale = 0f;
+            rb.linearVelocity = new Vector2(rb.linearVelocity.x, vertical * moveSpeed);
+        }
+        if (!isClimbing && rb.gravityScale == 0f)
+        {
+            rb.gravityScale = 1f;
+        }
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.gameObject.CompareTag("LADDER"))
+        {
+            if(collision.CompareTag("LADDER"))
+            {
+                LadderScript script = collision.GetComponent<LadderScript>();
+                if (script != null)
+                {
+                    script.DesactivarColiderExit();
+                }
+                isLadder = true;
+            }
+        }
+        
+        if (collision.CompareTag("LADDEREXIT"))
+        {
+            LadderScript script = collision.GetComponentInParent<LadderScript>();
+            if (script != null)
+            {
+                script.ActivarColiderExit();
+            }
+            isClimbing = false;
+            rb.gravityScale = 1f;
+            rb.linearVelocity = new Vector2(rb.linearVelocity.x, 0f);
+        }
     }
 
     private void OnTriggerStay2D(Collider2D collision)
@@ -77,12 +140,28 @@ public class PlayerMovement : MonoBehaviour
         {
             cuadradoInteraccion.SetActive(true);
         }
+        if (collision.gameObject.CompareTag("LADDEREXIT") && Input.GetKeyDown(KeyCode.S))
+        {
+            LadderScript script = collision.GetComponentInParent<LadderScript>();
+            if (script != null)
+            {
+                script.DesactivarColiderExit();
+            }
+        }
+
     }
     private void OnTriggerExit2D(Collider2D collision)
     {
         if (collision.gameObject.CompareTag("PICKUP"))
         {
             cuadradoInteraccion.SetActive(false);
+        }
+        if(collision.gameObject.CompareTag("LADDER"))
+        {
+            isLadder = false;
+            isClimbing = false;
+            rb.gravityScale = 1f; 
+            rb.linearVelocity = new Vector2(rb.linearVelocity.x, 0f); 
         }
     }
 
@@ -131,4 +210,5 @@ public class PlayerMovement : MonoBehaviour
         scaler.x *= -1;
         transform.localScale = scaler;
     }
+
 }
