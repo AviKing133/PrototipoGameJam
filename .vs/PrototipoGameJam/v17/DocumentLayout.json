@@ -3,12 +3,20 @@
   "WorkspaceRootPath": "D:\\Unity\\Proyectos\\PrototipoGameJam\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{85240055-0F2E-6704-24A7-9C1ED27F7189}|Assembly-CSharp.csproj|d:\\unity\\proyectos\\prototipogamejam\\assets\\scripts\\mainmenu.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{85240055-0F2E-6704-24A7-9C1ED27F7189}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\mainmenu.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{85240055-0F2E-6704-24A7-9C1ED27F7189}|Assembly-CSharp.csproj|d:\\unity\\proyectos\\prototipogamejam\\assets\\scripts\\pickupcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{85240055-0F2E-6704-24A7-9C1ED27F7189}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\pickupcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{85240055-0F2E-6704-24A7-9C1ED27F7189}|Assembly-CSharp.csproj|D:\\Unity\\Proyectos\\PrototipoGameJam\\assets\\scripts\\playercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{85240055-0F2E-6704-24A7-9C1ED27F7189}|Assembly-CSharp.csproj|D:\\Unity\\Proyectos\\PrototipoGameJam\\assets\\scripts\\gamemanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{85240055-0F2E-6704-24A7-9C1ED27F7189}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\gamemanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{85240055-0F2E-6704-24A7-9C1ED27F7189}|Assembly-CSharp.csproj|d:\\unity\\proyectos\\prototipogamejam\\assets\\scripts\\playercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{85240055-0F2E-6704-24A7-9C1ED27F7189}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\playercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{85240055-0F2E-6704-24A7-9C1ED27F7189}|Assembly-CSharp.csproj|D:\\Unity\\Proyectos\\PrototipoGameJam\\assets\\scripts\\mainmenu.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{85240055-0F2E-6704-24A7-9C1ED27F7189}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\mainmenu.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -27,27 +35,53 @@
             {
               "$type": "Document",
               "DocumentIndex": 0,
-              "Title": "MainMenu.cs",
-              "DocumentMoniker": "D:\\Unity\\Proyectos\\PrototipoGameJam\\Assets\\Scripts\\MainMenu.cs",
-              "RelativeDocumentMoniker": "Assets\\Scripts\\MainMenu.cs",
-              "ToolTip": "D:\\Unity\\Proyectos\\PrototipoGameJam\\Assets\\Scripts\\MainMenu.cs",
-              "RelativeToolTip": "Assets\\Scripts\\MainMenu.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA4AAAAAAAAAAAAAAA==",
+              "Title": "PickupController.cs",
+              "DocumentMoniker": "D:\\Unity\\Proyectos\\PrototipoGameJam\\Assets\\Scripts\\PickupController.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\PickupController.cs",
+              "ToolTip": "D:\\Unity\\Proyectos\\PrototipoGameJam\\Assets\\Scripts\\PickupController.cs",
+              "RelativeToolTip": "Assets\\Scripts\\PickupController.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABIAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-22T06:43:37.731Z",
+              "WhenOpened": "2025-11-22T09:29:15.288Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 1,
+              "Title": "GameManager.cs",
+              "DocumentMoniker": "D:\\Unity\\Proyectos\\PrototipoGameJam\\Assets\\Scripts\\GameManager.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\GameManager.cs",
+              "ToolTip": "D:\\Unity\\Proyectos\\PrototipoGameJam\\Assets\\Scripts\\GameManager.cs",
+              "RelativeToolTip": "Assets\\Scripts\\GameManager.cs",
+              "ViewState": "AgIAAA0AAAAAAAAAAAAQwAcAAAALAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-22T09:22:16.05Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "MainMenu.cs",
+              "DocumentMoniker": "D:\\Unity\\Proyectos\\PrototipoGameJam\\Assets\\Scripts\\MainMenu.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\MainMenu.cs",
+              "ToolTip": "D:\\Unity\\Proyectos\\PrototipoGameJam\\Assets\\Scripts\\MainMenu.cs",
+              "RelativeToolTip": "Assets\\Scripts\\MainMenu.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAcAAAAnAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-22T06:43:37.731Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
               "Title": "PlayerController.cs",
               "DocumentMoniker": "D:\\Unity\\Proyectos\\PrototipoGameJam\\Assets\\Scripts\\PlayerController.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\PlayerController.cs",
               "ToolTip": "D:\\Unity\\Proyectos\\PrototipoGameJam\\Assets\\Scripts\\PlayerController.cs",
               "RelativeToolTip": "Assets\\Scripts\\PlayerController.cs",
-              "ViewState": "AgIAAHMAAAAAAAAAAAAwwB8AAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAB4AAAAAAAAAAAAYwIUAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-21T21:48:40.41Z"
+              "WhenOpened": "2025-11-21T21:48:40.41Z",
+              "EditorCaption": ""
             }
           ]
         },
