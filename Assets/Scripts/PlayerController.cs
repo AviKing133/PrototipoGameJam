@@ -9,8 +9,17 @@ public class PlayerMovement : MonoBehaviour
     private float moveInput;
     private bool isGrounded;
     private bool facingRight = true;
+    private bool isDash = false;
+    private bool canDash = true;
+    [SerializeField]
+    private GameObject cuadradoInteraccion;
     [SerializeField]
     private Transform groundCheck;
+
+    [Header("Dash")]
+    public float dashSpeed = 15f;
+    public float dashDuration = 0.2f;
+    public float dashCooldown = 1f;
 
     void Start()
     {
@@ -30,10 +39,15 @@ public class PlayerMovement : MonoBehaviour
             isGrounded = false;
         }
         // Movimiento horizontal
-        if (isGrounded)
+        if (isGrounded && !isDash)
         {
             moveInput = Input.GetAxisRaw("Horizontal");
             rb.linearVelocity = new Vector2(moveInput * moveSpeed, rb.linearVelocity.y);
+        }
+        // Dash
+        if (Input.GetKeyDown(KeyCode.LeftShift) && canDash)
+        {
+            StartCoroutine(Dash());
         }
 
         // Saltar
@@ -57,6 +71,21 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
+    private void OnTriggerStay2D(Collider2D collision)
+    {
+        if (collision.gameObject.CompareTag("PICKUP"))
+        {
+            cuadradoInteraccion.SetActive(true);
+        }
+    }
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        if (collision.gameObject.CompareTag("PICKUP"))
+        {
+            cuadradoInteraccion.SetActive(false);
+        }
+    }
+
     // Detectar suelo mediante TAG
     private void OnCollisionStay2D(Collision2D other)
     {
@@ -73,7 +102,28 @@ public class PlayerMovement : MonoBehaviour
             isGrounded = false;
         }
     }
+    private System.Collections.IEnumerator Dash()
+    {
+        canDash = false;
+        isDash = true;
 
+        float originalGravity = rb.gravityScale;
+        rb.gravityScale = 0f; // evita caída durante el dash
+
+        // dirección según input actual (si está quieto, usa la última dirección)
+        float dashDirection = transform.localScale.x > 0 ? 1 : -1;
+        if (moveInput != 0) dashDirection = moveInput;
+
+        rb.linearVelocity = new Vector2(dashDirection * dashSpeed, 0f);
+
+        yield return new WaitForSeconds(dashDuration);
+
+        rb.gravityScale = originalGravity;
+        isDash = false;
+
+        yield return new WaitForSeconds(dashCooldown);
+        canDash = true;
+    }
     void Flip()
     {
         facingRight = !facingRight;
