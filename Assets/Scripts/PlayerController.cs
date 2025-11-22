@@ -13,7 +13,7 @@ public class PlayerMovement : MonoBehaviour
     public float wallJumpDisableTime = 0.15f;
 
     [Header("Jump")]
-    private float coyoteTimeCounter = 0f;
+    private float coyoteTimeCounter = 0;
     private float coyoteTime = 0.2f;
     public float moveSpeed = 5f;
     public float jumpForce = 7f;
@@ -213,10 +213,10 @@ public class PlayerMovement : MonoBehaviour
 
                 isOnWall = true;
             }
-        }
-        if (other.gameObject.CompareTag("GROUND"))
-        {
-            isGrounded = true;
+            if (other.gameObject.CompareTag("GROUND"))
+            {
+                isGrounded = true;
+            }
         }
     }
 
