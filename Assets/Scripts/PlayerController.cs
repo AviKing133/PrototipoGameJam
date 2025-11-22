@@ -9,6 +9,8 @@ public class PlayerMovement : MonoBehaviour
     private float moveInput;
     private bool isGrounded;
     private bool facingRight = true;
+    [SerializeField]
+    private Transform groundCheck;
 
     void Start()
     {
@@ -17,6 +19,16 @@ public class PlayerMovement : MonoBehaviour
 
     void Update()
     {
+        RaycastHit2D hit = Physics2D.Raycast(groundCheck.position, Vector2.down, 0.2f);
+
+        if (hit.collider != null && hit.collider.CompareTag("GROUND"))
+        {
+            isGrounded = true;
+        }
+        else
+        {
+            isGrounded = false;
+        }
         // Movimiento horizontal
         if (isGrounded)
         {
