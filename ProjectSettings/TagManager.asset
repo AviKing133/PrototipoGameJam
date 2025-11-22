@@ -10,6 +10,7 @@ TagManager:
   - PICKUP
   - LADDEREXIT
   - WALL
+  - BRKPLATFORM
   layers:
   - Default
   - TransparentFX

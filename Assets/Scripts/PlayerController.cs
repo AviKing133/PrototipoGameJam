@@ -13,6 +13,8 @@ public class PlayerMovement : MonoBehaviour
     public float wallJumpDisableTime = 0.15f;
 
     [Header("Jump")]
+    private float coyoteTimeCounter = 0f;
+    private float coyoteTime = 0.2f;
     public float moveSpeed = 5f;
     public float jumpForce = 7f;
 
@@ -27,8 +29,6 @@ public class PlayerMovement : MonoBehaviour
     private GameObject cuadradoInteraccion;
     [SerializeField]
     private Transform groundCheck;
-    [SerializeField]
-    private Transform coyoteTime;
 
     [Header("Dash")]
     public float dashSpeed = 15f;
@@ -53,6 +53,14 @@ public class PlayerMovement : MonoBehaviour
 
     void Update()
     {
+        if (isGrounded)
+        {
+            coyoteTimeCounter = coyoteTime;
+        }
+        else
+        {
+            coyoteTimeCounter -= Time.deltaTime;
+        }
         vertical = Input.GetAxis("Vertical");
         RaycastHit2D hit = Physics2D.Raycast(groundCheck.position, Vector2.down, 0.2f);
         if (!isGrounded && isOnWall && Input.GetButtonDown("Jump") && GameManager.instance.playerWallJump && wallDetectionEnabled)
@@ -95,20 +103,9 @@ public class PlayerMovement : MonoBehaviour
         else if (facingRight && moveInput < 0 && isGrounded)
         {
             Flip();
-        }
-        RaycastHit2D hitLeft = Physics2D.Raycast(coyoteTime.position, Vector2.left, 0.2f);
-        RaycastHit2D hitRight = Physics2D.Raycast(coyoteTime.position, Vector2.right, 0.2f);
-        
-        if (hitLeft.collider != null && hitLeft.collider.CompareTag("GROUND"))
-        {
-            isGrounded = true;
-        }
-        else if (hitRight.collider != null && hitRight.collider.CompareTag("GROUND"))
-        {
-            isGrounded = true;
-        }
+        }   
         // Saltar (sólo desde suelo)
-        if (isGrounded && Input.GetButtonDown("Jump"))
+        if (coyoteTimeCounter > 0 && Input.GetButtonDown("Jump"))
         {
             rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
         }
