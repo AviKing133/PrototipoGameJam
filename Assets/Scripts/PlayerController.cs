@@ -4,6 +4,13 @@ using static UnityEditor.Searcher.SearcherWindow.Alignment;
 
 public class PlayerMovement : MonoBehaviour
 {
+    private bool isOnWall = false;
+    private int wallDirection = 0; // -1 si la pared está a la izquierda, 1 si está a la derecha
+
+    [Header("Wall Jump")]
+    public float wallJumpForce = 10f;
+    public float wallJumpHorizontalForce = 8f;
+    [Header("Jump")]
     public float moveSpeed = 5f;
     public float jumpForce = 7f;
 
@@ -39,8 +46,11 @@ public class PlayerMovement : MonoBehaviour
         vertical = Input.GetAxis("Vertical");
 
         RaycastHit2D hit = Physics2D.Raycast(groundCheck.position, Vector2.down, 0.2f);
-
-        if(isLadder && Mathf.Abs(vertical) > 0f)
+        if (!isGrounded && isOnWall && Input.GetButtonDown("Jump") && GameManager.instance.playerWallJump)
+        {
+            WallJump();
+        }
+        if (isLadder && Mathf.Abs(vertical) > 0f)
         {
             isClimbing = true;
         }
@@ -166,6 +176,15 @@ public class PlayerMovement : MonoBehaviour
     // Detectar suelo mediante TAG
     private void OnCollisionStay2D(Collision2D other)
     {
+        if (other.gameObject.CompareTag("WALL"))
+        {
+            isOnWall = true;
+
+            if (other.transform.position.x > transform.position.x)
+                wallDirection = 1;
+            else
+                wallDirection = -1;
+        }
         if (other.gameObject.CompareTag("GROUND"))
         {
             isGrounded = true;
@@ -174,6 +193,11 @@ public class PlayerMovement : MonoBehaviour
 
     private void OnCollisionExit2D(Collision2D other)
     {
+        if (other.gameObject.CompareTag("WALL"))
+        {
+            isOnWall = false;
+        }
+
         if (other.gameObject.CompareTag("GROUND"))
         {
             isGrounded = false;
@@ -200,6 +224,11 @@ public class PlayerMovement : MonoBehaviour
 
         yield return new WaitForSeconds(dashCooldown);
         canDash = true;
+    }
+    private void WallJump()
+    {
+        rb.linearVelocity = Vector2.zero;
+        rb.AddForce(new Vector2(-wallDirection * wallJumpHorizontalForce, wallJumpForce), ForceMode2D.Impulse);
     }
     void Flip()
     {

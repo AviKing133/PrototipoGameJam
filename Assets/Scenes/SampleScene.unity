@@ -583,13 +583,78 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1731450471375275719, guid: 695a23c163fff48408443b4c4c65adf3, type: 3}
       propertyPath: m_TagString
-      value: GROUND
+      value: WALL
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 695a23c163fff48408443b4c4c65adf3, type: 3}
+--- !u!1001 &1458553880
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 1820738913156401505, guid: 64c5dee95ddcdf44f99a5cc3a3203f21, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -4.77
+      objectReference: {fileID: 0}
+    - target: {fileID: 1820738913156401505, guid: 64c5dee95ddcdf44f99a5cc3a3203f21, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -1.27
+      objectReference: {fileID: 0}
+    - target: {fileID: 1820738913156401505, guid: 64c5dee95ddcdf44f99a5cc3a3203f21, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1820738913156401505, guid: 64c5dee95ddcdf44f99a5cc3a3203f21, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1820738913156401505, guid: 64c5dee95ddcdf44f99a5cc3a3203f21, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1820738913156401505, guid: 64c5dee95ddcdf44f99a5cc3a3203f21, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1820738913156401505, guid: 64c5dee95ddcdf44f99a5cc3a3203f21, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1820738913156401505, guid: 64c5dee95ddcdf44f99a5cc3a3203f21, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1820738913156401505, guid: 64c5dee95ddcdf44f99a5cc3a3203f21, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1820738913156401505, guid: 64c5dee95ddcdf44f99a5cc3a3203f21, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7700110671641440687, guid: 64c5dee95ddcdf44f99a5cc3a3203f21, type: 3}
+      propertyPath: m_IsTrigger
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8725881998098437625, guid: 64c5dee95ddcdf44f99a5cc3a3203f21, type: 3}
+      propertyPath: m_Name
+      value: Pickup (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 8725881998098437625, guid: 64c5dee95ddcdf44f99a5cc3a3203f21, type: 3}
+      propertyPath: m_TagString
+      value: PICKUP
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 64c5dee95ddcdf44f99a5cc3a3203f21, type: 3}
 --- !u!1 &1694620102
 GameObject:
   m_ObjectHideFlags: 0
@@ -739,7 +804,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1731450471375275719, guid: 695a23c163fff48408443b4c4c65adf3, type: 3}
       propertyPath: m_TagString
-      value: GROUND
+      value: WALL
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -765,6 +830,10 @@ PrefabInstance:
     - target: {fileID: 2017325559891249736, guid: 7efb82719230da7439ae0cbb7588a1ed, type: 3}
       propertyPath: dashSpeed
       value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 2017325559891249736, guid: 7efb82719230da7439ae0cbb7588a1ed, type: 3}
+      propertyPath: wallJumpForce
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 2017325559891249736, guid: 7efb82719230da7439ae0cbb7588a1ed, type: 3}
       propertyPath: cuadradoInteraccion
@@ -961,4 +1030,5 @@ SceneRoots:
   - {fileID: 783591604}
   - {fileID: 1072668025}
   - {fileID: 7938975743824705283}
+  - {fileID: 1458553880}
   - {fileID: 453290255}

@@ -9,6 +9,7 @@ TagManager:
   - LADDER
   - PICKUP
   - LADDEREXIT
+  - WALL
   layers:
   - Default
   - TransparentFX

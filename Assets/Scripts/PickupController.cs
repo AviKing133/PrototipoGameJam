@@ -2,17 +2,38 @@ using UnityEngine;
 
 public class PickupController : MonoBehaviour
 {
-    private void OnTriggerStay2D(Collider2D collision)
+    private bool playerInside = false;
+
+    private void Update()
     {
-        if (collision.CompareTag("PLAYER") && Input.GetKeyDown(KeyCode.E) && !GameManager.instance.playerHaveDash)
+        if (playerInside && Input.GetKeyDown(KeyCode.E))
         {
-            GameManager.instance.ActivateDash();
+            if (!GameManager.instance.playerHaveDash)
+            {
+                GameManager.instance.ActivateDash();
+            }
+            else
+            {
+                GameManager.instance.ActivateWallJump();
+            }
+
             Destroy(gameObject);
         }
-        if (collision.CompareTag("PLAYER") && Input.GetKeyDown(KeyCode.E) && GameManager.instance.playerHaveDash)
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.CompareTag("PLAYER"))
         {
-            GameManager.instance.ActivateWallJump();
-            Destroy(gameObject);
+            playerInside = true;
+        }
+    }
+
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        if (collision.CompareTag("PLAYER"))
+        {
+            playerInside = false;
         }
     }
 }
