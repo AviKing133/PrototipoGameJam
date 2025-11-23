@@ -5,7 +5,7 @@ public class MainMenu : MonoBehaviour
 {
     public void CambioEscena()
     {
-        SceneManager.LoadScene("MainScene");
+        SceneManager.LoadScene("Animacio");
     }
     public void SalirJuego()
     {
