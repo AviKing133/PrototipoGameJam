@@ -12,6 +12,8 @@ TagManager:
   - WALL
   - BRKPLATFORM
   - CAMERALIMIT
+  - MUSICLVL3
+  - MUSICLVL2
   layers:
   - Default
   - TransparentFX

@@ -4,6 +4,13 @@ using UnityEngine.SceneManagement;
 public class CanvasScript : MonoBehaviour
 {
     [SerializeField] GameObject panel;
+    [SerializeField] GameObject imatge;
+
+    private void Start()
+    {
+        Destroy(imatge, 2f);
+    }
+
     public void PauseGame()
     {
         // activem el panell de pausa i aturem el temps

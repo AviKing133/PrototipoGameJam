@@ -12,11 +12,15 @@ public class GameManager : MonoBehaviour
     [SerializeField] private AudioClip jumpClip;
     [SerializeField] private AudioClip damageClip;
     [SerializeField] private AudioClip pickupClip;
+    [SerializeField] private AudioClip lvl1;
+    [SerializeField] private AudioClip lvl2;
+    [SerializeField] private AudioClip lvl3;
 
     private AudioSource audioSource;
 
     void Awake()
     {
+
         if (instance == null)
         {
             instance = this;
@@ -31,38 +35,66 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    public void Playlvl1()
+    {
+        PlayMusic(lvl1);
+    }
+    public void Playlvl2()
+    {
+        PlayMusic(lvl2);
+    }
+    public void Playlvl3()
+    {
+        PlayMusic(lvl3);
+    }
+
     public void ActivateDash()
     {
         playerHaveDash = true;
-        PlaySound(dashClip);
+        PlayEffect(dashClip);
     }
 
     public void ActivateWallJump()
     {
         playerWallJump = true;
-        PlaySound(wallJumpClip);
+        PlayEffect(wallJumpClip);
     }
 
     public void PlayerJump()
     {
-        PlaySound(jumpClip);
+        PlayEffect(jumpClip);
     }
 
     public void PlayerDamage()
     {
-        PlaySound(damageClip);
+        PlayEffect(damageClip);
     }
 
     public void PlayerPickup()
     {
-        PlaySound(pickupClip);
+        PlayEffect(pickupClip);
     }
 
-    private void PlaySound(AudioClip clip)
+    public void PlayMusic(AudioClip clip)
+    {
+        if (clip != null)
+        {
+            audioSource.clip = clip;
+            audioSource.loop = true; 
+            audioSource.Play();
+        }
+    }
+    public void PlayEffect(AudioClip clip)
     {
         if (clip != null)
         {
             audioSource.PlayOneShot(clip);
         }
     }
+    public void StopMusic()
+    {
+        audioSource.Stop();
+        audioSource.clip = null;
+    }
+
 }

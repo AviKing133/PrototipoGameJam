@@ -44,19 +44,21 @@ public class PlayerMovement : MonoBehaviour
     private float vertical;
     private bool isClimbing = false;
     private bool isLadder = false;
-
+    private int counterMusicNoReply = 0;
     private int moveDirection = 0;
 
     private bool wallDetectionEnabled = true;
 
+
+
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
-
+        GameManager.instance.Playlvl1();
         // Asegurarnos de que facingRight refleja el scale actual
         facingRight = transform.localScale.x > 0f;
         animator = GetComponent<Animator>();
-
+        
     }
 
     void Update()
@@ -182,6 +184,22 @@ public class PlayerMovement : MonoBehaviour
             rb.gravityScale = 1f;
             rb.linearVelocity = new Vector2(rb.linearVelocity.x, 0f);
         }
+
+        
+
+        if(collision.gameObject.CompareTag("MUSICLVL2"))
+        {
+            
+            GameManager.instance.StopMusic();
+            GameManager.instance.Playlvl2();
+        }
+        if(collision.gameObject.CompareTag("MUSICLVL3") && counterMusicNoReply == 0)
+        {
+            counterMusicNoReply++;
+            GameManager.instance.StopMusic();
+            GameManager.instance.Playlvl3();
+        }
+
     }
 
     private void OnTriggerStay2D(Collider2D collision)
