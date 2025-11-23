@@ -11,6 +11,7 @@ TagManager:
   - LADDEREXIT
   - WALL
   - BRKPLATFORM
+  - CAMERALIMIT
   layers:
   - Default
   - TransparentFX
