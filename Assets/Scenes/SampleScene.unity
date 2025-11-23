@@ -943,7 +943,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2017325559891249736, guid: 7efb82719230da7439ae0cbb7588a1ed, type: 3}
       propertyPath: dashSpeed
-      value: 14
+      value: 12
       objectReference: {fileID: 0}
     - target: {fileID: 2017325559891249736, guid: 7efb82719230da7439ae0cbb7588a1ed, type: 3}
       propertyPath: coyoteTime
@@ -951,7 +951,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2017325559891249736, guid: 7efb82719230da7439ae0cbb7588a1ed, type: 3}
       propertyPath: dashDuration
-      value: 0.001
+      value: 0.2
       objectReference: {fileID: 0}
     - target: {fileID: 2017325559891249736, guid: 7efb82719230da7439ae0cbb7588a1ed, type: 3}
       propertyPath: wallJumpForce
@@ -1000,6 +1000,10 @@ PrefabInstance:
     - target: {fileID: 2406487954793770414, guid: 7efb82719230da7439ae0cbb7588a1ed, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7724559292291851562, guid: 7efb82719230da7439ae0cbb7588a1ed, type: 3}
+      propertyPath: m_Mass
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

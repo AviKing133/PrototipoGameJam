@@ -53,12 +53,19 @@ public class PlayerMovement : MonoBehaviour
 
     void Update()
     {
+        // Movimiento horizontal
+        if (isGrounded && !isDash)
+        {
+            moveInput = Input.GetAxisRaw("Horizontal");
+            rb.linearVelocity = new Vector2(moveInput * moveSpeed, rb.linearVelocity.y);
+        }
         if (isGrounded)
         {
             coyoteTimeCounter = coyoteTime;
         }
         else
         {
+            canDash = true;
             coyoteTimeCounter -= Time.deltaTime;
         }
         vertical = Input.GetAxis("Vertical");
@@ -84,18 +91,12 @@ public class PlayerMovement : MonoBehaviour
         {
             isGrounded = false;
         }
-        // Movimiento horizontal
-        if (isGrounded && !isDash)
-        {
-            moveInput = Input.GetAxisRaw("Horizontal");
-            rb.linearVelocity = new Vector2(moveInput * moveSpeed, rb.linearVelocity.y);
-        }
         // Dash
         if (Input.GetKeyDown(KeyCode.LeftShift) && canDash && GameManager.instance.playerHaveDash)
         {
             StartCoroutine(Dash());
         }
-        // Voltear personaje según input horizontal (sólo si no está bloqueado por otras cosas)
+        // Voltear personaje segï¿½n input horizontal (sï¿½lo si no estï¿½ bloqueado por otras cosas)
         if (!facingRight && moveInput > 0 && isGrounded)
         {
             Flip();
@@ -104,7 +105,7 @@ public class PlayerMovement : MonoBehaviour
         {
             Flip();
         }   
-        // Saltar (sólo desde suelo)
+        // Saltar (sï¿½lo desde suelo)
         if (coyoteTimeCounter > 0 && Input.GetButtonDown("Jump"))
         {
             rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
@@ -182,14 +183,12 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    // Detectar pared mediante contactos - ahora más fiable
     private void OnCollisionStay2D(Collision2D other)
     {
         if (!wallDetectionEnabled) return;
 
         if (other.gameObject.CompareTag("WALL"))
         {
-            // calcular posición media de los puntos de contacto
             float sumX = 0f;
             int count = 0;
             foreach (ContactPoint2D c in other.contacts)
@@ -201,7 +200,6 @@ public class PlayerMovement : MonoBehaviour
             if (count > 0)
             {
                 float avgContactX = sumX / count;
-                // si avgContactX es mayor que la posición del jugador, la pared está a la derecha
                 if (avgContactX > transform.position.x)
                 {
                     wallDirection = 1;
@@ -240,9 +238,8 @@ public class PlayerMovement : MonoBehaviour
 
         rb.linearVelocity = Vector2.zero;
         float originalGravity = rb.gravityScale;
-        rb.gravityScale = 0f; // evita caída durante el dash
+        rb.gravityScale = 0f;
 
-        // dirección según input actual (si está quieto, usa la última dirección)
         dashDirection = transform.localScale.x > 0 ? 1 : -1;
         if (moveInput != 0 && isGrounded) dashDirection = moveInput;
 
@@ -254,7 +251,6 @@ public class PlayerMovement : MonoBehaviour
         isDash = false;
 
         yield return new WaitForSeconds(dashCooldown);
-        canDash = true;
     }
 
     private void WallJump()

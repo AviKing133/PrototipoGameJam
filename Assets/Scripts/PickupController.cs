@@ -8,13 +8,13 @@ public class PickupController : MonoBehaviour
     {
         if (playerInside && Input.GetKeyDown(KeyCode.E))
         {
-            if (!GameManager.instance.playerHaveDash)
+            if (!GameManager.instance.playerWallJump)
             {
-                GameManager.instance.ActivateDash();
+                GameManager.instance.ActivateWallJump();
             }
             else
             {
-                GameManager.instance.ActivateWallJump();
+                GameManager.instance.ActivateDash();
             }
 
             Destroy(gameObject);
