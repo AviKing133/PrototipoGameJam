@@ -7,6 +7,8 @@ public class PlayerMovement : MonoBehaviour
     private bool isOnWall = false;
     private int wallDirection = 0;
 
+    Animator animator;
+
     [Header("Wall Jump")]
     public float wallJumpForce = 10f;
     public float wallJumpHorizontalForce = 8f;
@@ -36,10 +38,14 @@ public class PlayerMovement : MonoBehaviour
     public float dashCooldown = 1f;
     float dashDirection = 0f;
 
+    int counter = 0;
+
     // VARIABLES PARA ESCALERA DE MANO
     private float vertical;
     private bool isClimbing = false;
     private bool isLadder = false;
+
+    private int moveDirection = 0;
 
     private bool wallDetectionEnabled = true;
 
@@ -49,6 +55,8 @@ public class PlayerMovement : MonoBehaviour
 
         // Asegurarnos de que facingRight refleja el scale actual
         facingRight = transform.localScale.x > 0f;
+        animator = GetComponent<Animator>();
+
     }
 
     void Update()
@@ -58,6 +66,24 @@ public class PlayerMovement : MonoBehaviour
         {
             moveInput = Input.GetAxisRaw("Horizontal");
             rb.linearVelocity = new Vector2(moveInput * moveSpeed, rb.linearVelocity.y);
+            if(moveInput > 0)
+            {
+                moveDirection = 1;
+            }
+            else if(moveInput < 0)
+            {
+                moveDirection = -1;
+            }
+            else
+            {
+                counter++;
+                if(counter > 9)
+                {
+                    counter = 0;
+                    moveDirection = 0;
+                }
+            }
+            animator.SetInteger("moveX", moveDirection);
         }
         if (isGrounded)
         {
@@ -76,19 +102,24 @@ public class PlayerMovement : MonoBehaviour
         }
         if (isLadder && Mathf.Abs(vertical) > 0f)
         {
+            animator.SetBool("climbing", true);
             isClimbing = true;
         }
         else if (!isLadder)
         {
+            animator.SetBool("climbing", false);
             isClimbing = false;
         }
 
         if (hit.collider != null && hit.collider.CompareTag("GROUND"))
         {
+
+            animator.SetBool("jumping", false);
             isGrounded = true;
         }
         else
         {
+            animator.SetBool("jumping", true);
             isGrounded = false;
         }
         // Dash
@@ -234,6 +265,7 @@ public class PlayerMovement : MonoBehaviour
     private System.Collections.IEnumerator Dash()
     {
         canDash = false;
+        animator.SetBool("dashing", true);
         isDash = true;
 
         rb.linearVelocity = Vector2.zero;
@@ -248,6 +280,7 @@ public class PlayerMovement : MonoBehaviour
         yield return new WaitForSeconds(dashDuration);
 
         rb.gravityScale = originalGravity;
+        animator.SetBool("dashing", false);
         isDash = false;
 
         yield return new WaitForSeconds(dashCooldown);
