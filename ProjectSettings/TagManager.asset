@@ -14,6 +14,7 @@ TagManager:
   - CAMERALIMIT
   - MUSICLVL3
   - MUSICLVL2
+  - FIN
   layers:
   - Default
   - TransparentFX

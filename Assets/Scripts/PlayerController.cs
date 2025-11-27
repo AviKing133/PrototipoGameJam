@@ -1,11 +1,11 @@
 using UnityEngine;
-using UnityEngine.U2D.IK;
-using static UnityEditor.Searcher.SearcherWindow.Alignment;
 
 public class PlayerMovement : MonoBehaviour
 {
     private bool isOnWall = false;
     private int wallDirection = 0;
+
+    [SerializeField] public GameObject fin;
 
     Animator animator;
 
@@ -113,6 +113,8 @@ public class PlayerMovement : MonoBehaviour
             isClimbing = false;
         }
 
+        
+
         if (hit.collider != null && hit.collider.CompareTag("GROUND"))
         {
 
@@ -171,6 +173,10 @@ public class PlayerMovement : MonoBehaviour
                 }
                 isLadder = true;
             }
+        }
+        if (collision.CompareTag("FIN"))
+        {
+            fin.SetActive(true);
         }
 
         if (collision.CompareTag("LADDEREXIT"))
